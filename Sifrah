@@ -1,0 +1,1036 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.OptionalDouble;
+import java.util.Random;
+import java.util.Scanner;
+
+public class Sifrah {
+
+    static Scanner scanner = new Scanner(System.in);
+    static Random random = new Random();
+
+    static ArrayList<String> bisuteria = new ArrayList<>();
+    static ArrayList<Double> precioBisuteria = new ArrayList<>();
+
+    static ArrayList<String> bolsosYCarteras = new ArrayList<>();
+    static ArrayList<Double> precioBolsosYCarteras = new ArrayList<>();
+
+    static ArrayList<String> accesoriosCabello = new ArrayList<>();
+    static ArrayList<Double> precioAccesoriosCabello = new ArrayList<>();
+
+    static ArrayList<String> complementos = new ArrayList<>();
+    static ArrayList<Double> precioComplementos = new ArrayList<>();
+
+    static ArrayList<String> belleza = new ArrayList<>();
+    static ArrayList<Double> precioBelleza = new ArrayList<>();
+
+    static ArrayList<String> carritoProductos = new ArrayList<>();
+    static ArrayList<Integer> carritoCantidades = new ArrayList<>();
+    static ArrayList<Double> carritoPrecios = new ArrayList<>();
+    static ArrayList<Double> carritoSubtotales = new ArrayList<>();
+
+    static ArrayList<String> sucursales = new ArrayList<>();
+    static ArrayList<String> correosUsuarios = new ArrayList<>();
+    static ArrayList<String> contrasenasUsuarios = new ArrayList<>();
+    static ArrayList<String> reclamos = new ArrayList<>();
+
+    static String[] metodosPago = {"Pago con tarjeta", "Pago en efectivo"};
+
+    static boolean sesionIniciada = false;
+    static boolean esAdmin = false;
+    static String usuarioActivo = "Invitado";
+
+    static double carritoTotal = 0;
+    static String nombreCliente = "";
+    static String apellidosCliente = "";
+    static String dniCliente = "";
+    static String telefonoCliente = "";
+    static String sucursalElegida = "";
+    static String ultimaBoleta = "";
+
+    public static void main(String[] args) {
+        cargarDatosIniciales();
+        mostrarBienvenida();
+        menuPrincipal();
+    }
+
+    public static void mostrarBienvenida() {
+        System.out.println("=======================================================");
+        System.out.println("                 SIFRAH TIENDA OFICIAL                ");
+        System.out.println("              Moda - Belleza - Accesorios             ");
+        System.out.println("=======================================================");
+    }
+
+    public static void cargarDatosIniciales() {
+        correosUsuarios.add("admin");
+        contrasenasUsuarios.add("12345");
+
+        correosUsuarios.add("queridamiss@gmail.com");
+        contrasenasUsuarios.add("12345678");
+
+        agregarProducto(bisuteria, precioBisuteria, "Anillo dorado con luna y estrella en zircon", 15.90);
+        agregarProducto(bisuteria, precioBisuteria, "Pulsera dorada con lazo y zircon", 31.90);
+        agregarProducto(bisuteria, precioBisuteria, "Pulsera dorada con corazon y zircon", 31.90);
+        agregarProducto(bisuteria, precioBisuteria, "Pulsera Premium Zircon Banado en Oro Con Charms", 29.90);
+        agregarProducto(bisuteria, precioBisuteria, "Set Aretes Premium Zircon Banado en Oro Delicate Dorado", 22.90);
+        agregarProducto(bisuteria, precioBisuteria, "Anillo Banado en Oro Premium Zircon Regulable Mariposa Dorado", 22.90);
+        agregarProducto(bisuteria, precioBisuteria, "Set Aretes Premium Zircon Banado en Oro Cherry Dorado", 22.90);
+        agregarProducto(bisuteria, precioBisuteria, "Set Collar + Arete Premium Zircon Banado en Oro Puppy Dorado", 39.90);
+        agregarProducto(bisuteria, precioBisuteria, "Aretes Premium Zircon Banado en Oro Bloom Dorado", 22.90);
+        agregarProducto(bisuteria, precioBisuteria, "Anillo Banado en Oro Premium Zircon Flor Dorado", 22.90);
+
+        agregarProducto(bolsosYCarteras, precioBolsosYCarteras, "Mochila viajera lila", 129.90);
+        agregarProducto(bolsosYCarteras, precioBolsosYCarteras, "Mochila duna rosa", 89.90);
+        agregarProducto(bolsosYCarteras, precioBolsosYCarteras, "Maleta para viaje negro", 99.90);
+        agregarProducto(bolsosYCarteras, precioBolsosYCarteras, "Canguro moda beige", 39.90);
+        agregarProducto(bolsosYCarteras, precioBolsosYCarteras, "Mochila mini negro", 59.90);
+        agregarProducto(bolsosYCarteras, precioBolsosYCarteras, "Mochila mini floral", 59.90);
+        agregarProducto(bolsosYCarteras, precioBolsosYCarteras, "Crossbody negro", 59.90);
+        agregarProducto(bolsosYCarteras, precioBolsosYCarteras, "Mochila duna negro", 89.90);
+        agregarProducto(bolsosYCarteras, precioBolsosYCarteras, "Maleta para viaje beige", 99.90);
+        agregarProducto(bolsosYCarteras, precioBolsosYCarteras, "Mochila urbana azul", 83.90);
+
+        agregarProducto(accesoriosCabello, precioAccesoriosCabello, "Vincha plateada con mariposas y perlas", 16.90);
+        agregarProducto(accesoriosCabello, precioAccesoriosCabello, "Vincha negra con flor y cadena decorativa", 17.90);
+        agregarProducto(accesoriosCabello, precioAccesoriosCabello, "Vincha blanca corazones", 12.90);
+        agregarProducto(accesoriosCabello, precioAccesoriosCabello, "Vincha duo dorado", 14.90);
+        agregarProducto(accesoriosCabello, precioAccesoriosCabello, "Vincha basica plana azul", 16.90);
+        agregarProducto(accesoriosCabello, precioAccesoriosCabello, "Vincha con mariposas multicolor", 10.90);
+        agregarProducto(accesoriosCabello, precioAccesoriosCabello, "Vincha essential nudo", 22.90);
+        agregarProducto(accesoriosCabello, precioAccesoriosCabello, "Vincha slim rosa", 19.90);
+        agregarProducto(accesoriosCabello, precioAccesoriosCabello, "Vincha fantasy dorado", 22.90);
+        agregarProducto(accesoriosCabello, precioAccesoriosCabello, "Vincha bloom lila", 19.90);
+
+        agregarProducto(complementos, precioComplementos, "Lentes marrones", 39.00);
+        agregarProducto(complementos, precioComplementos, "Lentes negros", 34.00);
+        agregarProducto(complementos, precioComplementos, "Lentes rectangulares con montura marron", 34.90);
+        agregarProducto(complementos, precioComplementos, "Lentes de sol aviador negro", 49.90);
+        agregarProducto(complementos, precioComplementos, "Lentes de sol retro print marrones", 36.90);
+        agregarProducto(complementos, precioComplementos, "Lentes de sol cateyes marrones print", 34.90);
+        agregarProducto(complementos, precioComplementos, "Pashminas femme moda animal print", 34.90);
+        agregarProducto(complementos, precioComplementos, "Pashmina moda azul", 39.90);
+        agregarProducto(complementos, precioComplementos, "Pashmina femme moda rosa", 29.90);
+        agregarProducto(complementos, precioComplementos, "Pashmina moda guinda", 29.90);
+
+        agregarProducto(belleza, precioBelleza, "Neceser Porta Cosmeticos Corazon Rosa", 19.90);
+        agregarProducto(belleza, precioBelleza, "Rizador de pestanas Rosa", 16.90);
+        agregarProducto(belleza, precioBelleza, "Vincha para spa rosada", 9.90);
+        agregarProducto(belleza, precioBelleza, "Kit rosa para cabello", 9.90);
+        agregarProducto(belleza, precioBelleza, "Esponja de maquillaje rosa", 4.90);
+        agregarProducto(belleza, precioBelleza, "Set de brochas", 24.90);
+        agregarProducto(belleza, precioBelleza, "Cepillos desechables para pestanas", 6.90);
+        agregarProducto(belleza, precioBelleza, "Pinzas de cejas moradas", 9.90);
+        agregarProducto(belleza, precioBelleza, "Cepillo limpiador y exfoliante de rostro", 11.90);
+        agregarProducto(belleza, precioBelleza, "Pinza y perfilador rosado para cejas", 6.90);
+
+        sucursales.add("Real Plaza Juliaca: Jiron Tumbes 391, local LC");
+        sucursales.add("Sifrah Real Plaza Cusco: Av. Collasuyo 2964, local LC-256");
+        sucursales.add("Real Plaza Arequipa: Av. Ejercito 1009");
+        sucursales.add("Sifrah Plaza Center Moquegua");
+        sucursales.add("Sifrah Mega Plaza Ica");
+    }
+
+    public static void agregarProducto(ArrayList<String> productos, ArrayList<Double> precios, String nombre, double precio) {
+        productos.add(nombre);
+        precios.add(precio);
+    }
+
+    public static void menuPrincipal() {
+        boolean programaActivo = true;
+
+        while (programaActivo) {
+            System.out.println("-------- ACCESO A SIFRAH --------");
+            System.out.println("Usuario activo: " + usuarioActivo);
+            System.out.println("1.- Registrarse");
+            System.out.println("2.- Iniciar sesion");
+            System.out.println("3.- Entrar como invitado");
+            System.out.println("4.- Salir del programa");
+
+            int opcion = leerEntero("Seleccione una opcion: ");
+
+            switch (opcion) {
+                case 1:
+                    registro();
+                    menuTienda();
+                    break;
+                case 2:
+                    if (loginUsuario()) {
+                        menuTienda();
+                    }
+                    break;
+                case 3:
+                    usuarioActivo = "Invitado";
+                    sesionIniciada = false;
+                    esAdmin = false;
+                    menuTienda();
+                    break;
+                case 4:
+                    System.out.println("Gracias por visitar SIFRAH.");
+                    programaActivo = false;
+                    break;
+                default:
+                    System.out.println("Opcion no valida.");
+            }
+        }
+    }
+
+    public static void menuTienda() {
+        boolean sesionActiva = true;
+
+        while (sesionActiva) {
+            System.out.println("-------- MENU PRINCIPAL --------");
+            System.out.println("Usuario activo: " + usuarioActivo);
+            System.out.println("Administrador: " + esAdmin);
+            System.out.println("1.- Entrar a categorias");
+            System.out.println("2.- Ver carrito");
+            System.out.println("3.- Finalizar compra");
+            System.out.println("4.- Panel de administrador");
+            System.out.println("5.- Ofertas aleatorias");
+            System.out.println("6.- Estadisticas de precios");
+            System.out.println("7.- Libro de reclamaciones");
+            System.out.println("8.- Salir de la sesion");
+
+            int opcion = leerEntero("Seleccione una opcion: ");
+
+            switch (opcion) {
+                case 1:
+                    categorias();
+                    break;
+                case 2:
+                    mostrarCarrito();
+                    break;
+                case 3:
+                    finalizarCompra();
+                    break;
+                case 4:
+                    if (esAdmin) {
+                        menuAdminCRUD();
+                    } else {
+                        System.out.println("Acceso denegado. Solo administrador.");
+                    }
+                    break;
+                case 5:
+                    mostrarOfertasAleatorias();
+                    break;
+                case 6:
+                    mostrarEstadisticasPrecios();
+                    break;
+                case 7:
+                    libroReclamaciones();
+                    break;
+                case 8:
+                    cerrarSesion();
+                    sesionActiva = false;
+                    break;
+                default:
+                    System.out.println("Opcion no valida.");
+            }
+        }
+    }
+
+    public static void cerrarSesion() {
+        usuarioActivo = "Invitado";
+        sesionIniciada = false;
+        esAdmin = false;
+        System.out.println("Sesion cerrada. Volviendo al menu de acceso.");
+    }
+
+    public static boolean loginUsuario() {
+        System.out.println("----- INICIAR SESION -----");
+
+        for (int intentos = 1; intentos <= 3; intentos++) {
+            String correoIn = leerTexto("Ingrese su correo: ");
+            String passIn = leerTexto("Ingrese su contrasena: ");
+
+            boolean estructuraCorreoOk = (correoIn.contains("@") && correoIn.endsWith(".com")) || correoIn.equals("admin");
+            boolean estructuraPassOk = passIn.length() >= 5;
+
+            if (!estructuraCorreoOk || !estructuraPassOk) {
+                System.out.println("Los datos no cumplen los requisitos.");
+                System.out.println("Intento " + intentos + " de 3");
+            } else {
+                for (int i = 0; i < correosUsuarios.size(); i++) {
+                    if (correoIn.equals(correosUsuarios.get(i)) && passIn.equals(contrasenasUsuarios.get(i))) {
+                        sesionIniciada = true;
+                        usuarioActivo = correoIn;
+                        esAdmin = correoIn.equals("admin");
+                        System.out.println(esAdmin ? "Ingreso exitoso como administrador." : "Ingreso exitoso como cliente.");
+                        return true;
+                    }
+                }
+
+                System.out.println("Credenciales no validas.");
+                System.out.println("Intento " + intentos + " de 3");
+            }
+        }
+
+        System.out.println("Cuenta bloqueada por demasiados intentos.");
+        return false;
+    }
+
+    public static void registro() {
+        boolean registrado = false;
+
+        System.out.println("----- REGISTRO DE CLIENTE -----");
+
+        do {
+            String correo = leerTexto("Ingrese su correo electronico: ");
+            String contrasena = leerTexto("Ingrese su contrasena: ");
+
+            boolean correoValido = correo.contains("@") && correo.endsWith(".com");
+            boolean contrasenaValida = contrasena.length() >= 8;
+
+            if (correoValido && contrasenaValida) {
+                if (correosUsuarios.contains(correo)) {
+                    System.out.println("Ese correo ya existe.");
+                } else {
+                    correosUsuarios.add(correo);
+                    contrasenasUsuarios.add(contrasena);
+                    usuarioActivo = correo;
+                    sesionIniciada = true;
+                    esAdmin = false;
+                    registrado = true;
+                    System.out.println("Registro exitoso.");
+                }
+            } else {
+                System.out.println("Datos incorrectos.");
+                if (!correoValido) {
+                    System.out.println("El correo debe contener @ y terminar en .com");
+                }
+                if (!contrasenaValida) {
+                    System.out.println("La contrasena debe tener minimo 8 caracteres");
+                }
+            }
+        } while (!registrado);
+    }
+
+    public static void categorias() {
+        boolean volver = false;
+
+        do {
+            System.out.println("-------- CATEGORIAS --------");
+            System.out.println("1.- Bisuteria");
+            System.out.println("2.- Bolsos y carteras");
+            System.out.println("3.- Accesorios de cabello");
+            System.out.println("4.- Complementos");
+            System.out.println("5.- Belleza");
+            System.out.println("6.- Volver al menu principal");
+
+            int opcion = leerEntero("Seleccione una opcion: ");
+
+            switch (opcion) {
+                case 1:
+                    menuCategoria(bisuteria, precioBisuteria, "CATALOGO BISUTERIA SIFRAH");
+                    break;
+                case 2:
+                    menuCategoria(bolsosYCarteras, precioBolsosYCarteras, "BOLSOS Y CARTERAS");
+                    break;
+                case 3:
+                    menuCategoria(accesoriosCabello, precioAccesoriosCabello, "ACCESORIOS DE CABELLO");
+                    break;
+                case 4:
+                    menuCategoria(complementos, precioComplementos, "COMPLEMENTOS");
+                    break;
+                case 5:
+                    menuCategoria(belleza, precioBelleza, "BELLEZA");
+                    break;
+                case 6:
+                    volver = true;
+                    break;
+                default:
+                    System.out.println("Opcion no valida.");
+            }
+        } while (!volver);
+    }
+
+    public static void menuCategoria(ArrayList<String> productos, ArrayList<Double> precios, String titulo) {
+        boolean salir = false;
+
+        do {
+            System.out.println("----- " + titulo + " -----");
+            System.out.println("1.- Ver productos");
+            System.out.println("2.- Ver productos ordenados por nombre");
+            System.out.println("3.- Ver productos ordenados por precio");
+            System.out.println("4.- Agregar producto al carrito");
+            System.out.println("5.- Volver");
+
+            int opcion = leerEntero("Seleccione una opcion: ");
+
+            switch (opcion) {
+                case 1:
+                    imprimirProductosTienda(productos, precios);
+                    break;
+                case 2:
+                    mostrarOrdenadoPorNombre(productos, precios);
+                    break;
+                case 3:
+                    mostrarOrdenadoPorPrecio(productos, precios);
+                    break;
+                case 4:
+                    seleccionarProducto(productos, precios);
+                    break;
+                case 5:
+                    salir = true;
+                    break;
+                default:
+                    System.out.println("Opcion no valida.");
+            }
+        } while (!salir);
+    }
+
+    public static void seleccionarProducto(ArrayList<String> productos, ArrayList<Double> precios) {
+        imprimirProductosTienda(productos, precios);
+
+        int opcion = leerEntero("Seleccione producto: ");
+
+        if (opcion >= 1 && opcion <= productos.size()) {
+            int posicion = opcion - 1;
+            int cantidad = leerEntero("Ingrese cantidad: ");
+
+            if (cantidad > 0) {
+                agregarAlCarrito(productos.get(posicion), cantidad, precios.get(posicion));
+            } else {
+                System.out.println("Cantidad no valida.");
+            }
+        } else {
+            System.out.println("Producto no valido.");
+        }
+    }
+
+    public static void agregarAlCarrito(String producto, int cantidad, double precio) {
+        boolean existe = false;
+
+        for (int i = 0; i < carritoProductos.size(); i++) {
+            if (carritoProductos.get(i).equalsIgnoreCase(producto)) {
+                int nuevaCantidad = carritoCantidades.get(i) + cantidad;
+                double nuevoSubtotal = nuevaCantidad * precio;
+                carritoCantidades.set(i, nuevaCantidad);
+                carritoSubtotales.set(i, nuevoSubtotal);
+                existe = true;
+            }
+        }
+
+        if (!existe) {
+            carritoProductos.add(producto);
+            carritoCantidades.add(cantidad);
+            carritoPrecios.add(precio);
+            carritoSubtotales.add(cantidad * precio);
+        }
+
+        calcularTotalCarrito();
+        System.out.println("Producto agregado al carrito.");
+        System.out.printf("Total acumulado: S/ %.2f%n", carritoTotal);
+    }
+
+    public static void mostrarCarrito() {
+        System.out.println("-------- PRODUCTOS EN CARRITO --------");
+
+        if (carritoProductos.isEmpty()) {
+            System.out.println("El carrito esta vacio.");
+            return;
+        }
+
+        for (int i = 0; i < carritoProductos.size(); i++) {
+            System.out.printf("%d.- %s | Cantidad: %d | Precio: S/ %.2f | Subtotal: S/ %.2f%n",
+                    i + 1, carritoProductos.get(i), carritoCantidades.get(i), carritoPrecios.get(i), carritoSubtotales.get(i));
+        }
+
+        System.out.println("Cantidad total de productos: " + contarProductosRecursivo(0));
+        System.out.printf("TOTAL: S/ %.2f%n", carritoTotal);
+    }
+
+    public static void calcularTotalCarrito() {
+        carritoTotal = 0;
+
+        for (double subtotal : carritoSubtotales) {
+            carritoTotal += subtotal;
+        }
+    }
+
+    public static void finalizarCompra() {
+        if (carritoProductos.isEmpty()) {
+            System.out.println("No puede finalizar compra porque el carrito esta vacio.");
+            return;
+        }
+
+        calcularTotalCarrito();
+        aplicarOfertaAleatoria();
+        mostrarCarrito();
+        datosEntrega();
+        mostrarSucursales();
+
+        boolean pagoCorrecto = pagar(carritoTotal);
+
+        if (pagoCorrecto) {
+            carritoProductos.clear();
+            carritoCantidades.clear();
+            carritoPrecios.clear();
+            carritoSubtotales.clear();
+            carritoTotal = 0;
+        }
+    }
+
+    public static void aplicarOfertaAleatoria() {
+        int descuento = random.nextInt(4) * 5;
+
+        if (descuento > 0) {
+            double montoDescuento = carritoTotal * descuento / 100;
+            carritoTotal -= montoDescuento;
+            System.out.println("Oferta aleatoria aplicada: " + descuento + "% de descuento.");
+            System.out.printf("Ahorro: S/ %.2f%n", montoDescuento);
+        } else {
+            System.out.println("No se aplico descuento aleatorio en esta compra.");
+        }
+    }
+
+    public static void datosEntrega() {
+        System.out.println("-------- DATOS DE ENTREGA --------");
+
+        do {
+            nombreCliente = leerTexto("Ingrese nombre: ");
+        } while (nombreCliente.isEmpty());
+
+        do {
+            apellidosCliente = leerTexto("Ingrese apellidos: ");
+        } while (apellidosCliente.isEmpty());
+
+        do {
+            dniCliente = leerTexto("Ingrese DNI de 8 digitos: ");
+        } while (!dniCliente.matches("\\d{8}"));
+
+        do {
+            telefonoCliente = leerTexto("Ingrese telefono de 9 digitos: ");
+        } while (!telefonoCliente.matches("\\d{9}"));
+    }
+
+    public static boolean pagar(double total) {
+        System.out.println("Seleccione metodo de pago");
+
+        for (int i = 0; i < metodosPago.length; i++) {
+            System.out.println((i + 1) + ".- " + metodosPago[i]);
+        }
+
+        int opcionPago = leerEntero("Seleccione una opcion: ");
+
+        switch (opcionPago) {
+            case 1:
+                if (validarPagoTarjeta(total)) {
+                    generarBoleta(total, total);
+                    return true;
+                }
+                break;
+            case 2:
+                return pagoEfectivo(total);
+            default:
+                System.out.println("Opcion no valida.");
+        }
+
+        return false;
+    }
+
+    public static boolean validarPagoTarjeta(double total) {
+        boolean pagoAprobado = false;
+
+        System.out.printf("Monto total a pagar con tarjeta: S/ %.2f%n", total);
+
+        do {
+            String numeroTarjeta = leerTexto("Ingrese los 16 digitos de la tarjeta: ");
+            String fechaVencimiento = leerTexto("Ingrese la fecha de caducidad (MM/AA): ");
+            String cvv = leerTexto("Ingrese el codigo de seguridad CVV: ");
+
+            boolean tarjetaOk = numeroTarjeta.matches("\\d{16}");
+            boolean cvvOk = cvv.matches("\\d{3}");
+            boolean fechaOk = validarFechaTarjeta(fechaVencimiento);
+
+            if (tarjetaOk && fechaOk && cvvOk) {
+                System.out.println("Autorizando fondos... transaccion exitosa.");
+                pagoAprobado = true;
+            } else {
+                System.out.println("Operacion denegada. Verifique tarjeta, fecha y CVV.");
+            }
+        } while (!pagoAprobado);
+
+        return true;
+    }
+
+    public static boolean validarFechaTarjeta(String fechaVencimiento) {
+        try {
+            DateTimeFormatter formateador = DateTimeFormatter.ofPattern("MM/yy");
+            YearMonth fechaTarjeta = YearMonth.parse(fechaVencimiento, formateador);
+            YearMonth fechaActual = YearMonth.now();
+            return fechaTarjeta.isAfter(fechaActual) || fechaTarjeta.equals(fechaActual);
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+    }
+
+    public static boolean pagoEfectivo(double total) {
+        double pago;
+
+        do {
+            System.out.printf("Total a pagar: S/ %.2f%n", total);
+            pago = leerDouble("Ingrese dinero recibido: ");
+
+            if (pago < total) {
+                System.out.println("Monto insuficiente.");
+            }
+        } while (pago < total);
+
+        generarBoleta(total, pago);
+        return true;
+    }
+
+    public static void mostrarSucursales() {
+        System.out.println("Escoja una sede para recojo en tienda");
+
+        for (int i = 0; i < sucursales.size(); i++) {
+            System.out.println((i + 1) + ".- " + sucursales.get(i));
+        }
+
+        int opcion = leerEntero("Ingrese una opcion: ");
+
+        if (opcion >= 1 && opcion <= sucursales.size()) {
+            sucursalElegida = sucursales.get(opcion - 1);
+        } else {
+            sucursalElegida = "Sucursal no valida";
+        }
+
+        System.out.println("Pedido listo en " + sucursalElegida);
+    }
+
+    public static void generarBoleta(double total, double pago) {
+        double igv = total * 0.18;
+        double subtotal = total - igv;
+        double vuelto = pago - total;
+        StringBuilder boleta = new StringBuilder();
+
+        boleta.append("================ BOLETA DE VENTA ================");
+        boleta.append("SIFRAH BIJOU S.A.C.");
+        boleta.append("RUC: 20601466920");
+        boleta.append("Cliente: ").append(nombreCliente).append(" ").append(apellidosCliente).append("");
+        boleta.append("DNI: ").append(dniCliente).append("\n");
+        boleta.append("Telefono: ").append(telefonoCliente).append("\n");
+        boleta.append("Sucursal de recojo: ").append(sucursalElegida).append("\n");
+        boleta.append("-------------------------------------------------\n");
+        boleta.append("PRODUCTOS COMPRADOS");
+
+        for (int i = 0; i < carritoProductos.size(); i++) {
+            boleta.append(i + 1).append(".- ").append(carritoProductos.get(i))
+                    .append(" | Cantidad: ").append(carritoCantidades.get(i))
+                    .append(" | Precio: S/ ").append(String.format("%.2f", carritoPrecios.get(i)))
+                    .append(" | Subtotal: S/ ").append(String.format("%.2f", carritoSubtotales.get(i)))
+                    .append("\n");
+        }
+
+        boleta.append("-------------------------------------------------\n");
+        boleta.append(String.format("SUBTOTAL: S/ %.2f%n", subtotal));
+        boleta.append(String.format("IGV (18%%): S/ %.2f%n", igv));
+        boleta.append(String.format("TOTAL A PAGAR: S/ %.2f%n", total));
+        boleta.append(String.format("DINERO RECIBIDO: S/ %.2f%n", pago));
+        boleta.append(String.format("VUELTO: S/ %.2f%n", vuelto));
+        boleta.append("GRACIAS POR TU COMPRA!\n");
+        boleta.append("=================================================\n");
+
+        ultimaBoleta = boleta.toString();
+        System.out.println(ultimaBoleta);
+        exportarBoletaArchivo(ultimaBoleta);
+    }
+
+    public static void exportarBoletaArchivo(String boleta) {
+        String nombreArchivo = "boleta_sifrah.txt";
+
+        try (FileWriter writer = new FileWriter(nombreArchivo, true)) {
+            writer.write(boleta);
+            writer.write(System.lineSeparator());
+            System.out.println("Boleta exportada en el archivo: " + nombreArchivo);
+        } catch (IOException e) {
+            System.out.println("No se pudo exportar la boleta: " + e.getMessage());
+        }
+    }
+
+    public static void mostrarOfertasAleatorias() {
+        ArrayList<String> productos = unirProductos();
+        ArrayList<Double> precios = unirPrecios();
+
+        if (productos.isEmpty()) {
+            System.out.println("No hay productos registrados.");
+            return;
+        }
+
+        System.out.println("-------- OFERTAS ALEATORIAS --------");
+
+        for (int i = 1; i <= 3; i++) {
+            int posicion = random.nextInt(productos.size());
+            int descuento = 10 + random.nextInt(4) * 5;
+            double precioOriginal = precios.get(posicion);
+            double precioOferta = precioOriginal - (precioOriginal * descuento / 100);
+
+            System.out.printf("%d.- %s | Antes: S/ %.2f | Descuento: %d%% | Ahora: S/ %.2f%n",
+                    i, productos.get(posicion), precioOriginal, descuento, precioOferta);
+        }
+    }
+
+    public static void mostrarEstadisticasPrecios() {
+        ArrayList<Double> precios = unirPrecios();
+
+        OptionalDouble precioMaximo = precios.stream().mapToDouble(Double::doubleValue).max();
+        OptionalDouble precioMinimo = precios.stream().mapToDouble(Double::doubleValue).min();
+
+        System.out.println("-------- ESTADISTICAS DE PRECIOS --------");
+
+        if (precioMaximo.isPresent() && precioMinimo.isPresent()) {
+            System.out.printf("Precio maximo: S/ %.2f%n", precioMaximo.getAsDouble());
+            System.out.printf("Precio minimo: S/ %.2f%n", precioMinimo.getAsDouble());
+        } else {
+            System.out.println("No hay precios para analizar.");
+        }
+    }
+
+    public static void menuAdminCRUD() {
+        int opcion;
+
+        do {
+            System.out.println("-------- PANEL ADMINISTRADOR --------");
+            System.out.println("1.- Registrar producto en tienda");
+            System.out.println("2.- Mostrar productos de tienda");
+            System.out.println("3.- Modificar producto de tienda");
+            System.out.println("4.- Eliminar producto de tienda");
+            System.out.println("5.- Buscar producto de tienda");
+            System.out.println("6.- Ver libro de reclamaciones");
+            System.out.println("7.- Cerrar panel administrador");
+
+            opcion = leerEntero("Seleccione una opcion: ");
+
+            switch (opcion) {
+                case 1:
+                    adminCrearProducto();
+                    break;
+                case 2:
+                    adminMostrarProductos();
+                    break;
+                case 3:
+                    adminModificarProducto();
+                    break;
+                case 4:
+                    adminEliminarProducto();
+                    break;
+                case 5:
+                    adminBuscarProducto();
+                    break;
+                case 6:
+                    mostrarReclamos();
+                    break;
+                case 7:
+                    System.out.println("Saliendo del panel administrador...");
+                    break;
+                default:
+                    System.out.println("Opcion no valida.");
+            }
+        } while (opcion != 7);
+    }
+
+    public static int seleccionarCategoriaAdmin() {
+        System.out.println("Seleccione categoria de tienda:");
+        System.out.println("1.- Bisuteria");
+        System.out.println("2.- Bolsos y carteras");
+        System.out.println("3.- Accesorios de cabello");
+        System.out.println("4.- Complementos");
+        System.out.println("5.- Belleza");
+        return leerEntero("Categoria: ");
+    }
+
+    public static ArrayList<String> obtenerProductosPorCategoria(int categoria) {
+        switch (categoria) {
+            case 1:
+                return bisuteria;
+            case 2:
+                return bolsosYCarteras;
+            case 3:
+                return accesoriosCabello;
+            case 4:
+                return complementos;
+            case 5:
+                return belleza;
+            default:
+                return null;
+        }
+    }
+
+    public static ArrayList<Double> obtenerPreciosPorCategoria(int categoria) {
+        switch (categoria) {
+            case 1:
+                return precioBisuteria;
+            case 2:
+                return precioBolsosYCarteras;
+            case 3:
+                return precioAccesoriosCabello;
+            case 4:
+                return precioComplementos;
+            case 5:
+                return precioBelleza;
+            default:
+                return null;
+        }
+    }
+
+    public static void imprimirProductosTienda(ArrayList<String> productos, ArrayList<Double> precios) {
+        for (int i = 0; i < productos.size(); i++) {
+            System.out.printf("%d.- %s S/ %.2f%n", i + 1, productos.get(i), precios.get(i));
+        }
+    }
+
+    public static void mostrarOrdenadoPorNombre(ArrayList<String> productos, ArrayList<Double> precios) {
+        ArrayList<Integer> indices = crearIndices(productos.size());
+        indices.sort(Comparator.comparing(productos::get));
+
+        for (int indice : indices) {
+            System.out.printf("%d.- %s S/ %.2f%n", indice + 1, productos.get(indice), precios.get(indice));
+        }
+    }
+
+    public static void mostrarOrdenadoPorPrecio(ArrayList<String> productos, ArrayList<Double> precios) {
+        ArrayList<Integer> indices = crearIndices(productos.size());
+        indices.sort(Comparator.comparing(precios::get));
+
+        for (int indice : indices) {
+            System.out.printf("%d.- %s S/ %.2f%n", indice + 1, productos.get(indice), precios.get(indice));
+        }
+    }
+
+    public static ArrayList<Integer> crearIndices(int cantidad) {
+        ArrayList<Integer> indices = new ArrayList<>();
+
+        for (int i = 0; i < cantidad; i++) {
+            indices.add(i);
+        }
+
+        return indices;
+    }
+
+    public static void adminCrearProducto() {
+        int categoria = seleccionarCategoriaAdmin();
+        ArrayList<String> productos = obtenerProductosPorCategoria(categoria);
+        ArrayList<Double> precios = obtenerPreciosPorCategoria(categoria);
+
+        if (productos == null || precios == null) {
+            System.out.println("Categoria no valida.");
+            return;
+        }
+
+        String nombre = leerTexto("Ingrese nombre del nuevo producto: ");
+        double precio = leerDouble("Ingrese precio: ");
+
+        if (nombre.isEmpty()) {
+            System.out.println("El nombre no puede estar vacio.");
+        } else if (precio <= 0) {
+            System.out.println("Precio no valido.");
+        } else {
+            agregarProducto(productos, precios, nombre, precio);
+            System.out.println("Producto agregado correctamente.");
+        }
+    }
+
+    public static void adminMostrarProductos() {
+        int categoria = seleccionarCategoriaAdmin();
+        ArrayList<String> productos = obtenerProductosPorCategoria(categoria);
+        ArrayList<Double> precios = obtenerPreciosPorCategoria(categoria);
+
+        if (productos != null && precios != null) {
+            imprimirProductosTienda(productos, precios);
+        } else {
+            System.out.println("Categoria no valida.");
+        }
+    }
+
+    public static void adminModificarProducto() {
+        int categoria = seleccionarCategoriaAdmin();
+        ArrayList<String> productos = obtenerProductosPorCategoria(categoria);
+        ArrayList<Double> precios = obtenerPreciosPorCategoria(categoria);
+
+        if (productos == null || precios == null) {
+            System.out.println("Categoria no valida.");
+            return;
+        }
+
+        imprimirProductosTienda(productos, precios);
+        int opcion = leerEntero("Ingrese el numero del producto a modificar: ");
+
+        if (opcion >= 1 && opcion <= productos.size()) {
+            int posicion = opcion - 1;
+            String nuevoNombre = leerTexto("Ingrese nuevo nombre: ");
+            double nuevoPrecio = leerDouble("Ingrese nuevo precio: ");
+
+            if (nuevoNombre.isEmpty()) {
+                System.out.println("El nombre no puede estar vacio.");
+            } else if (nuevoPrecio <= 0) {
+                System.out.println("Precio no valido.");
+            } else {
+                productos.set(posicion, nuevoNombre);
+                precios.set(posicion, nuevoPrecio);
+                System.out.println("Producto modificado correctamente.");
+            }
+        } else {
+            System.out.println("Producto no valido.");
+        }
+    }
+
+    public static void adminEliminarProducto() {
+        int categoria = seleccionarCategoriaAdmin();
+        ArrayList<String> productos = obtenerProductosPorCategoria(categoria);
+        ArrayList<Double> precios = obtenerPreciosPorCategoria(categoria);
+
+        if (productos == null || precios == null) {
+            System.out.println("Categoria no valida.");
+            return;
+        }
+
+        imprimirProductosTienda(productos, precios);
+        int opcion = leerEntero("Ingrese el numero del producto a eliminar: ");
+
+        if (opcion >= 1 && opcion <= productos.size()) {
+            int posicion = opcion - 1;
+            productos.remove(posicion);
+            precios.remove(posicion);
+            System.out.println("Producto eliminado correctamente.");
+        } else {
+            System.out.println("Producto no valido.");
+        }
+    }
+
+    public static void adminBuscarProducto() {
+        String buscar = leerTexto("Ingrese el nombre del producto a buscar: ");
+        boolean encontrado = false;
+
+        encontrado = buscarEnCategoria(bisuteria, precioBisuteria, buscar, "Bisuteria") || encontrado;
+        encontrado = buscarEnCategoria(bolsosYCarteras, precioBolsosYCarteras, buscar, "Bolsos y carteras") || encontrado;
+        encontrado = buscarEnCategoria(accesoriosCabello, precioAccesoriosCabello, buscar, "Accesorios de cabello") || encontrado;
+        encontrado = buscarEnCategoria(complementos, precioComplementos, buscar, "Complementos") || encontrado;
+        encontrado = buscarEnCategoria(belleza, precioBelleza, buscar, "Belleza") || encontrado;
+
+        if (!encontrado) {
+            System.out.println("Producto no encontrado.");
+        }
+    }
+
+    public static boolean buscarEnCategoria(ArrayList<String> productos, ArrayList<Double> precios, String buscar, String categoria) {
+        boolean encontrado = false;
+
+        for (int i = 0; i < productos.size(); i++) {
+            if (productos.get(i).toLowerCase().contains(buscar.toLowerCase())) {
+                System.out.println("Producto encontrado");
+                System.out.println("Categoria: " + categoria);
+                System.out.println("Numero: " + (i + 1));
+                System.out.println("Nombre: " + productos.get(i));
+                System.out.printf("Precio: S/ %.2f%n", precios.get(i));
+                encontrado = true;
+            }
+        }
+
+        return encontrado;
+    }
+
+    public static void libroReclamaciones() {
+        System.out.println("-------- LIBRO DE RECLAMACIONES --------");
+        System.out.println("De acuerdo a lo establecido en el codigo de Proteccion y Defensa del Consumidor Sifrah Bijou SAC con RUC 20601466920 y direccion Av. El Derby Nro. 254 urb. El Derby De Monterrico, distrito de Santiago de Surco, provincia y departamento de Lima, cuenta con un Libro de Reclamaciones a su disposicion*");
+        System.out.println("Al ingresar sus datos en el Libro de Reclamaciones usted esta aceptando el tratamiento de sus datos personales para la solucion de su reclamo*");
+        String nombre = leerTexto("Ingrese su nombre completo: ");
+        String dni = leerTexto("Ingrese su DNI: ");
+        String detalle = leerTexto("Describa su reclamo: ");
+
+        if (nombre.isEmpty() || dni.isEmpty() || detalle.isEmpty()) {
+            System.out.println("No se registro el reclamo porque hay datos vacios.");
+            return;
+        }
+
+        String reclamo = "Cliente: " + nombre + " | DNI: " + dni + " | Reclamo: " + detalle;
+        reclamos.add(reclamo);
+        exportarReclamoArchivo(reclamo);
+        System.out.println("Su reclamo fue registrado correctamente.");
+    }
+
+    public static void mostrarReclamos() {
+        System.out.println("-------- RECLAMOS REGISTRADOS --------");
+
+        if (reclamos.isEmpty()) {
+            System.out.println("No hay reclamos registrados en esta sesion.");
+            return;
+        }
+
+        for (int i = 0; i < reclamos.size(); i++) {
+            System.out.println((i + 1) + ".- " + reclamos.get(i));
+        }
+    }
+
+    public static void exportarReclamoArchivo(String reclamo) {
+        try (FileWriter writer = new FileWriter("libro_reclamaciones.txt", true)) {
+            writer.write(reclamo);
+            writer.write(System.lineSeparator());
+        } catch (IOException e) {
+            System.out.println("No se pudo guardar el reclamo: " + e.getMessage());
+        }
+    }
+
+    public static ArrayList<String> unirProductos() {
+        ArrayList<String> productos = new ArrayList<>();
+        productos.addAll(bisuteria);
+        productos.addAll(bolsosYCarteras);
+        productos.addAll(accesoriosCabello);
+        productos.addAll(complementos);
+        productos.addAll(belleza);
+        return productos;
+    }
+
+    public static ArrayList<Double> unirPrecios() {
+        ArrayList<Double> precios = new ArrayList<>();
+        precios.addAll(precioBisuteria);
+        precios.addAll(precioBolsosYCarteras);
+        precios.addAll(precioAccesoriosCabello);
+        precios.addAll(precioComplementos);
+        precios.addAll(precioBelleza);
+        return precios;
+    }
+
+    public static int contarProductosRecursivo(int indice) {
+        if (indice >= carritoCantidades.size()) {
+            return 0;
+        }
+
+        return carritoCantidades.get(indice) + contarProductosRecursivo(indice + 1);
+    }
+
+    public static String leerTexto(String mensaje) {
+        System.out.print(mensaje);
+        return scanner.nextLine().trim();
+    }
+
+    public static int leerEntero(String mensaje) {
+        while (true) {
+            System.out.print(mensaje);
+            String entrada = scanner.nextLine();
+
+            try {
+                return Integer.parseInt(entrada);
+            } catch (NumberFormatException e) {
+                System.out.println("Ingrese un numero entero valido.");
+            }
+        }
+    }
+
+    public static double leerDouble(String mensaje) {
+        while (true) {
+            System.out.print(mensaje);
+            String entrada = scanner.nextLine().replace(",", ".");
+
+            try {
+                return Double.parseDouble(entrada);
+            } catch (NumberFormatException e) {
+                System.out.println("Ingrese un numero decimal valido.");
+            }
+        }
+    }
+}
